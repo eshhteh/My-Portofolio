@@ -4,7 +4,7 @@ import { styles } from '../styles/portoStyle';
 import Reveal from './Reveal';
 
 export default function SpotifySection({ compact = false }) {
-  // ⚡ Tinggi widget disesuaikan: compact = 80px, full = 152px
+
   const height = compact ? "80" : "152";
 
   const content = (

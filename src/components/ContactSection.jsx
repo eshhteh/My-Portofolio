@@ -1,9 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Mail, Send, CheckCircle2, XCircle, Loader2 } from 'lucide-react';
 import emailjs from '@emailjs/browser';
 import { styles } from '../styles/portoStyle';
 import { SOCIALS } from '../data/portfolioData';
 import Reveal from './Reveal';
+
+const MOBILE_BREAKPOINT = 768;
+
+function useIsMobileLocal() {
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== "undefined" ? window.innerWidth < MOBILE_BREAKPOINT : false
+  );
+  useEffect(() => {
+    const mq = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`);
+    const handler = (e) => setIsMobile(e.matches);
+    setIsMobile(mq.matches);
+    mq.addEventListener ? mq.addEventListener("change", handler) : mq.addListener(handler);
+    return () => {
+      mq.removeEventListener ? mq.removeEventListener("change", handler) : mq.removeListener(handler);
+    };
+  }, []);
+  return isMobile;
+}
 
 const Github = ({ size = 18 }) => (
   <svg viewBox="0 0 24 24" width={size} height={size} fill="currentColor">
@@ -31,6 +49,7 @@ export default function ContactSection() {
   const [form, setForm] = useState({ name: "", email: "", message: "" });
   const [status, setStatus] = useState("idle"); // idle | sending | success | error
   const [errorMsg, setErrorMsg] = useState("");
+  const isMobile = useIsMobileLocal();
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -71,14 +90,27 @@ export default function ContactSection() {
 
   return (
     <Reveal>
-      <section id="contact" style={styles.section}>
-        <div style={styles.ctaBanner}>
+      <section id="contact" style={{ ...styles.section, ...(isMobile ? { padding: "24px 16px" } : {}) }}>
+        <div style={styles.secHead}>
+          <h2 style={{ ...styles.secH2, ...(isMobile ? { fontSize: 18 } : {}) }}>Contact Me</h2>
+        </div>
+        <div style={{ ...styles.ctaBanner, ...(isMobile ? { padding: 20, borderRadius: 16 } : {}) }}>
           <div style={styles.ctaGlow} />
 
-          <div style={styles.ctaLayout}>
-            <div style={styles.ctaLeft}>
-              <h2 style={styles.ctaH2}>Let's Collaborate!</h2>
-              <p style={styles.ctaP}>
+          <div
+            style={{
+              ...styles.ctaLayout,
+              ...(isMobile ? { gap: 24 } : {}),
+            }}
+          >
+            <div
+              style={{
+                ...styles.ctaLeft,
+                ...(isMobile ? { minWidth: 0, width: "100%", flexBasis: "auto" } : {}),
+              }}
+            >
+              <h2 style={{ ...styles.ctaH2, ...(isMobile ? { fontSize: 20 } : {}) }}>Let's Collaborate!</h2>
+              <p style={{ ...styles.ctaP, ...(isMobile ? { fontSize: 13 } : {}) }}>
                 Interested in hiring me or discussing a new project? Send a message directly from here, I'll reply as soon as I can.
               </p>
 
@@ -95,7 +127,14 @@ export default function ContactSection() {
               </div>
             </div>
 
-            <form onSubmit={handleSubmit} style={styles.ctaFormCard} noValidate>
+            <form
+              onSubmit={handleSubmit}
+              style={{
+                ...styles.ctaFormCard,
+                ...(isMobile ? { minWidth: 0, width: "100%", maxWidth: "100%", flexBasis: "auto", padding: 16 } : {}),
+              }}
+              noValidate
+            >
               <div style={styles.contactFormGrid}>
                 <input
                   type="text"
@@ -126,7 +165,12 @@ export default function ContactSection() {
                 />
               </div>
 
-              <div style={styles.ctaFormActions}>
+              <div
+                style={{
+                  ...styles.ctaFormActions,
+                  ...(isMobile ? { flexDirection: "column" } : {}),
+                }}
+              >
                 <button
                   type="submit"
                   disabled={status === "sending"}
@@ -135,6 +179,7 @@ export default function ContactSection() {
                     ...styles.ctaSubmitBtn,
                     cursor: status === "sending" ? "not-allowed" : "pointer",
                     opacity: status === "sending" ? 0.7 : 1,
+                    ...(isMobile ? { width: "100%" } : {}),
                   }}
                 >
                   {status === "sending" ? (
@@ -153,6 +198,7 @@ export default function ContactSection() {
                   style={{
                     ...styles.btnPillOutline,
                     ...styles.ctaEmailBtn,
+                    ...(isMobile ? { width: "100%" } : {}),
                   }}
                 >
                   <Mail size={16} /> Direct Email
@@ -173,8 +219,8 @@ export default function ContactSection() {
           </div>
         </div>
 
-        <footer style={styles.footer}>
-          <p>© {new Date().getFullYear()} Aisah Atik Fitriani. Made with React & Spotify Theme.</p>
+        <footer style={{ ...styles.footer, ...(isMobile ? { textAlign: "center", fontSize: 11, padding: "20px 16px" } : {}) }}>
+          <p>© {new Date().getFullYear()} Aisah Atik Fitriani. Made with React & Vite.</p>
         </footer>
       </section>
     </Reveal>

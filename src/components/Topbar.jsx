@@ -1,7 +1,27 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search } from 'lucide-react';
-import { SOCIALS } from '../data/portfolioData';
+import { SOCIALS, PERSONAL_INFO } from '../data/portfolioData';
 import { styles } from '../styles/portoStyle';
+
+const MOBILE_BREAKPOINT = 768;
+
+function useIsMobile(breakpoint = MOBILE_BREAKPOINT) {
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== "undefined" ? window.innerWidth < breakpoint : false
+  );
+
+  useEffect(() => {
+    const mq = window.matchMedia(`(max-width: ${breakpoint - 1}px)`);
+    const handler = (e) => setIsMobile(e.matches);
+    setIsMobile(mq.matches);
+    mq.addEventListener ? mq.addEventListener("change", handler) : mq.addListener(handler);
+    return () => {
+      mq.removeEventListener ? mq.removeEventListener("change", handler) : mq.removeListener(handler);
+    };
+  }, [breakpoint]);
+
+  return isMobile;
+}
 
 const Github = ({ size = 18 }) => (
   <svg viewBox="0 0 24 24" width={size} height={size} fill="currentColor">
@@ -16,6 +36,55 @@ const Linkedin = ({ size = 18 }) => (
 );
 
 export default function Topbar({ query, setQuery, scrollTo }) {
+  const isMobile = useIsMobile();
+
+
+  if (isMobile) {
+    return (
+      <div style={styles.topbarMobileWrap}>
+        <div style={styles.topbarMobileActionsRow}>
+          <button style={styles.topbarMobileBrand} onClick={() => scrollTo("about")}>
+            <div style={styles.topbarMobileBrandMark}>AF</div>
+            <span style={styles.topbarMobileBrandText}>
+              <span style={styles.topbarMobileBrandName}>Aisah Atik Fitriani</span>
+              <span style={styles.topbarMobileBrandRole}>// web developer</span>
+            </span>
+          </button>
+
+          <div style={styles.topbarMobileSocials}>
+            <a
+              href={SOCIALS.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={styles.btnIcon}
+              aria-label="GitHub"
+            >
+              <Github size={18} />
+            </a>
+            <a
+              href={SOCIALS.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={styles.btnIcon}
+              aria-label="LinkedIn"
+            >
+              <Linkedin size={18} />
+            </a>
+            <a
+              href={SOCIALS.resume}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ ...styles.btnPill, textDecoration: "none", display: "inline-flex", alignItems: "center" }}
+            >
+              Resume
+            </a>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+
   return (
     <header style={styles.topbar}>
       <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
@@ -32,7 +101,7 @@ export default function Topbar({ query, setQuery, scrollTo }) {
       </div>
 
       <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-        <a        
+        <a
           href={SOCIALS.github}
           target="_blank"
           rel="noopener noreferrer"

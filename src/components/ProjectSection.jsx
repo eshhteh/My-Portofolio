@@ -5,6 +5,7 @@ import { styles } from '../styles/portoStyle';
 import Reveal from './Reveal';
 
 const SLIDE_INTERVAL = 2000; // ms per slide
+const MOBILE_BREAKPOINT = 768;
 
 const Github = ({ size = 16 }) => (
   <svg viewBox="0 0 24 24" width={size} height={size} fill="currentColor">
@@ -28,9 +29,26 @@ const LinkIcon = ({ size = 16 }) => (
   </svg>
 );
 
+function useIsMobileLocal() {
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== "undefined" ? window.innerWidth < MOBILE_BREAKPOINT : false
+  );
+  useEffect(() => {
+    const mq = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`);
+    const handler = (e) => setIsMobile(e.matches);
+    setIsMobile(mq.matches);
+    mq.addEventListener ? mq.addEventListener("change", handler) : mq.addListener(handler);
+    return () => {
+      mq.removeEventListener ? mq.removeEventListener("change", handler) : mq.removeListener(handler);
+    };
+  }, []);
+  return isMobile;
+}
+
 export default function ProjectSection({ query, isPlaying, nowPlaying, handlePlayProject }) {
   const [category, setCategory] = useState("Semua");
   const [previewProject, setPreviewProject] = useState(null);
+  const isMobile = useIsMobileLocal();
 
   const filteredProjects = useMemo(() => PROJECTS.filter((p) => {
     const matchCat = category === "Semua" || p.cat === category;
@@ -44,22 +62,31 @@ export default function ProjectSection({ query, isPlaying, nowPlaying, handlePla
   const handleTogglePlay = (proj) => {
     const isThisPlaying = isPlaying && nowPlaying?.id === proj.id;
     handlePlayProject(proj);
-    // kalau sedang play lalu ditekan lagi (pause), modal ditutup
+
     setPreviewProject(isThisPlaying ? null : proj);
   };
 
   return (
-    <section id="project" style={styles.section}>
+    <section id="project" style={{ ...styles.section, ...(isMobile ? { padding: "24px 16px" } : {}) }}>
       <div style={styles.secHead}>
-        <h2 style={styles.secH2}>My Projects</h2>
+        <h2 style={{ ...styles.secH2, ...(isMobile ? { fontSize: 18 } : {}) }}>My Projects</h2>
       </div>
 
-      <div style={styles.chipRow}>
+      <div
+        style={{
+          ...styles.chipRow,
+          ...(isMobile ? { overflowX: "auto", flexWrap: "nowrap", paddingBottom: 6, WebkitOverflowScrolling: "touch" } : {}),
+        }}
+      >
         {CATEGORIES.map((c) => (
           <button
             key={c}
             onClick={() => setCategory(c)}
-            style={{ ...styles.chip, ...(category === c ? styles.chipActive : {}) }}
+            style={{
+              ...styles.chip,
+              ...(category === c ? styles.chipActive : {}),
+              ...(isMobile ? { flexShrink: 0, whiteSpace: "nowrap" } : {}),
+            }}
           >
             {c}
           </button>
@@ -69,13 +96,21 @@ export default function ProjectSection({ query, isPlaying, nowPlaying, handlePla
       {filteredProjects.length === 0 ? (
         <div style={styles.emptyState}>Tidak ada project yang cocok dengan pencarianmu.</div>
       ) : (
-        <div style={styles.grid}>
+        <div
+          style={{
+            ...styles.grid,
+            ...(isMobile
+              ? { gridTemplateColumns: "repeat(2, 1fr)", gap: 12 }
+              : {}),
+          }}
+        >
           {filteredProjects.map((p, i) => (
             <Reveal key={p.id} delay={i * 60}>
               <ProjectCard
                 proj={p}
                 isPlaying={isPlaying && nowPlaying?.id === p.id}
                 onPlay={() => handleTogglePlay(p)}
+                isMobile={isMobile}
               />
             </Reveal>
           ))}
@@ -88,13 +123,14 @@ export default function ProjectSection({ query, isPlaying, nowPlaying, handlePla
           isPlaying={isPlaying && nowPlaying?.id === previewProject.id}
           onTogglePlay={() => handleTogglePlay(previewProject)}
           onClose={() => setPreviewProject(null)}
+          isMobile={isMobile}
         />
       )}
     </section>
   );
 }
 
-function ProjectCard({ proj, isPlaying, onPlay }) {
+function ProjectCard({ proj, isPlaying, onPlay, isMobile }) {
   const [hover, setHover] = useState(false);
   const [playHover, setPlayHover] = useState(false);
   const [imgError, setImgError] = useState(false);
@@ -104,7 +140,11 @@ function ProjectCard({ proj, isPlaying, onPlay }) {
 
   return (
     <div
-      style={{ ...styles.card, background: hover ? "#232323" : "#181818" }}
+      style={{
+        ...styles.card,
+        background: hover ? "#232323" : "#181818",
+        ...(isMobile ? { padding: 10, borderRadius: 10 } : {}),
+      }}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
     >
@@ -116,6 +156,7 @@ function ProjectCard({ proj, isPlaying, onPlay }) {
             : `linear-gradient(135deg, ${proj.grad[0]}, ${proj.grad[1]})`,
           position: "relative",
           overflow: "hidden",
+          ...(isMobile ? { aspectRatio: "1 / 1", borderRadius: 8 } : {}),
         }}
       >
         {hasImage ? (
@@ -126,7 +167,7 @@ function ProjectCard({ proj, isPlaying, onPlay }) {
             style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
           />
         ) : (
-          <span style={styles.coverGlyph}>{proj.glyph}</span>
+          <span style={{ ...styles.coverGlyph, ...(isMobile ? { fontSize: 28 } : {}) }}>{proj.glyph}</span>
         )}
 
         <button
@@ -138,31 +179,53 @@ function ProjectCard({ proj, isPlaying, onPlay }) {
             ...styles.playOverlay,
             ...(showPlay ? styles.playOverlayVisible : {}),
             ...(showPlay && playHover ? styles.playOverlayHover : {}),
+            ...(isMobile ? { width: 32, height: 32 } : {}),
           }}
         >
           {isPlaying ? (
-            <Pause size={16} fill="#000" color="#000" />
+            <Pause size={isMobile ? 13 : 16} fill="#000" color="#000" />
           ) : (
-            <Play size={16} fill="#000" color="#000" style={{ marginLeft: 2 }} />
+            <Play size={isMobile ? 13 : 16} fill="#000" color="#000" style={{ marginLeft: 2 }} />
           )}
         </button>
       </div>
-      <h3 style={styles.cardTitle}>{proj.title}</h3>
-      <p style={styles.cardDesc}>{proj.desc}</p>
-      <div style={styles.projectLinksRow}>
+
+      <h3
+        style={{
+          ...styles.cardTitle,
+          ...(isMobile ? { fontSize: 12.5, minHeight: "2.4em", marginTop: 8 } : {}),
+        }}
+      >
+        {proj.title}
+      </h3>
+      <p
+        style={{
+          ...styles.cardDesc,
+          ...(isMobile ? { fontSize: 10, minHeight: "2.4em", marginTop: 2, WebkitLineClamp: 2 } : {}),
+        }}
+      >
+        {proj.desc}
+      </p>
+
+      <div
+        style={{
+          ...styles.projectLinksRow,
+          ...(isMobile ? { gap: 10, marginTop: 8, paddingTop: 8 } : {}),
+        }}
+      >
         {proj.github && (
           <ProjectIcon href={proj.github} label="GitHub">
-            <Github size={16} />
+            <Github size={isMobile ? 14 : 16} />
           </ProjectIcon>
         )}
         {proj.docs && (
           <ProjectIcon href={proj.docs} label="Documentations">
-            <Docs size={16} />
+            <Docs size={isMobile ? 14 : 16} />
           </ProjectIcon>
         )}
         {proj.link && (
           <ProjectIcon href={proj.link} label="Link">
-            <LinkIcon size={16} />
+            <LinkIcon size={isMobile ? 14 : 16} />
           </ProjectIcon>
         )}
       </div>
@@ -170,7 +233,7 @@ function ProjectCard({ proj, isPlaying, onPlay }) {
   );
 }
 
-function ProjectPreviewModal({ proj, isPlaying, onTogglePlay, onClose }) {
+function ProjectPreviewModal({ proj, isPlaying, onTogglePlay, onClose, isMobile }) {
   const [playHover, setPlayHover] = useState(false);
   const [imgError, setImgError] = useState(false);
   const [slideIndex, setSlideIndex] = useState(0);
@@ -186,7 +249,7 @@ function ProjectPreviewModal({ proj, isPlaying, onTogglePlay, onClose }) {
   const hasImages = slides.length > 0 && !imgError;
   const hasMultiple = slides.length > 1;
 
-  // pecah string "React, Node.js, MongoDB" jadi array chip teknologi
+
   const techList = useMemo(() => {
     if (!proj.stack) return [];
     return proj.stack.split(",").map((t) => t.trim()).filter(Boolean);
@@ -199,7 +262,7 @@ function ProjectPreviewModal({ proj, isPlaying, onTogglePlay, onClose }) {
   const next = useCallback(() => goTo(slideIndex + 1), [goTo, slideIndex]);
   const prev = useCallback(() => goTo(slideIndex - 1), [goTo, slideIndex]);
 
-  // reset saat ganti project
+
   useEffect(() => {
     setSlideIndex(0);
     setImgError(false);
@@ -207,7 +270,7 @@ function ProjectPreviewModal({ proj, isPlaying, onTogglePlay, onClose }) {
     enteredOnceRef.current = false;
   }, [proj]);
 
-  // autoplay — selalu jalan kecuali user benar-benar sedang hover (setelah mouse-move pertama)
+
   useEffect(() => {
     if (!hasMultiple || paused) return;
     const timer = setInterval(() => {
@@ -241,7 +304,7 @@ function ProjectPreviewModal({ proj, isPlaying, onTogglePlay, onClose }) {
   return (
     <div style={styles.modalBackdrop} onClick={onClose} role="presentation">
       <div
-        style={styles.modal}
+        style={{ ...styles.modal, ...(isMobile ? { width: "100%", maxHeight: "85vh", borderRadius: 16 } : {}) }}
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
@@ -312,9 +375,9 @@ function ProjectPreviewModal({ proj, isPlaying, onTogglePlay, onClose }) {
           </button>
         </div>
 
-        <div style={{ ...styles.modalBody, ...styles.modalBodyCol }}>
+        <div style={{ ...styles.modalBody, ...styles.modalBodyCol, ...(isMobile ? { padding: "16px 18px 20px" } : {}) }}>
           {/* Judul */}
-          <h3 style={styles.modalTitleSection}>{proj.title}</h3>
+          <h3 style={{ ...styles.modalTitleSection, ...(isMobile ? { fontSize: 18 } : {}) }}>{proj.title}</h3>
 
           {/* Deskripsi */}
           <ModalSection icon={<FileText size={13} color="#727272" />} label="Description">

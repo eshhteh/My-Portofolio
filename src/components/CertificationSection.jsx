@@ -145,7 +145,7 @@ function CertPreviewModal({ cert, onClose }) {
                 ...(linkHover ? { background: "#fff", color: "#000" } : {}),
               }}
             >
-              Lihat kredensial <ExternalLink size={14} />
+              Show Credentials <ExternalLink size={14} />
             </a>
           )}
         </div>

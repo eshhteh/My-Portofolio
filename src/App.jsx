@@ -2,17 +2,14 @@ import React, { useState, useEffect } from 'react';
 import Sidebar from './components/Sidebar';
 import Topbar from './components/Topbar';
 import HeroSection from './components/HeroSection';
-import SpotifySection from './components/SpotifySection';
 import ProjectSection from './components/ProjectSection';
 import CertificationSection from './components/CertificationSection';
 import AwardSection from './components/AwardSection';
 import ContactSection from './components/ContactSection';
-import PlayerBar from './components/PlayerBar';
-import { PROJECTS } from './data/portfolioData';
+import { PROJECTS, NAV } from './data/portfolioData';
 import { styles } from './styles/portoStyle';
 import AboutSection from './components/AboutSection';
 import WorkExperienceSection from './components/WorkExperienceSection';
-
 
 export default function Portfolio() {
   const [query, setQuery] = useState("");
@@ -23,13 +20,46 @@ export default function Portfolio() {
   const [sidebarWidth, setSidebarWidth] = useState(260);
   const [collapsed, setCollapsed] = useState(false);
 
+
+  const [activeSection, setActiveSection] = useState(NAV[0]?.id || "about");
+
+  useEffect(() => {
+    const sectionIds = NAV.map((n) => n.id);
+    const elements = sectionIds
+      .map((id) => document.getElementById(id))
+      .filter(Boolean);
+
+    if (elements.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries.filter((e) => e.isIntersecting);
+        if (visible.length === 0) return;
+
+
+        visible.sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+        setActiveSection(visible[0].target.id);
+      },
+      {
+        root: null,
+
+
+        rootMargin: "-20% 0px -70% 0px",
+        threshold: 0,
+      }
+    );
+
+    elements.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
+
   useEffect(() => {
     if (!isPlaying) return;
     const t = setInterval(() => setProgress((p) => (p >= 100 ? 0 : p + 0.4)), 200);
     return () => clearInterval(t);
   }, [isPlaying]);
 
-  // Auto-collapse sidebar di layar sempit
+
   useEffect(() => {
     const handleResize = () => {
       setCollapsed(window.innerWidth < 768);
@@ -50,7 +80,7 @@ export default function Portfolio() {
     <div style={styles.appWrap}>
       <div style={styles.app}>
         <Sidebar
-          activeSection="about"
+          activeSection={activeSection}
           scrollTo={scrollTo}
           width={sidebarWidth}
           setWidth={setSidebarWidth}
