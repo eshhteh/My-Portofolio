@@ -816,7 +816,6 @@ export const styles = {
     marginLeft: "auto",
     fontSize: 12,
     color: "#727272",
-    fontFamily: "JetBrains Mono",
     flexShrink: 0,
   },
   ctaBanner: {
@@ -861,7 +860,6 @@ export const styles = {
   timeLabel: {
     fontSize: 10.5,
     color: "#727272",
-    fontFamily: "JetBrains Mono",
   },
   progressTrack: {
     flex: 1,
@@ -960,7 +958,6 @@ export const styles = {
   certModalYear: {
     color: "#727272",
     fontSize: 12.5,
-    fontFamily: "JetBrains Mono",
     marginBottom: 16,
   },
   certModalDesc: {
@@ -1061,7 +1058,6 @@ export const styles = {
   awardYear: {
     fontSize: 13.5,
     color: "#727272",
-    fontFamily: "JetBrains Mono",
     textAlign: "right",
   },
   awardRowClickable: {
@@ -1109,7 +1105,6 @@ export const styles = {
   awardModalYear: {
     color: "#727272",
     fontSize: 12.5,
-    fontFamily: "JetBrains Mono",
     marginBottom: 4,
   },
   awardModalDesc: {
