@@ -27,7 +27,7 @@ export default function AwardSection() {
   const isMobile = useIsMobileLocal();
 
   return (
-    <section id="award" style={{ ...styles.section, ...(isMobile ? { padding: "24px 16px" } : {}) }}>
+    <section id="award" style={{ ...styles.section, minHeight: "20vh", ...(isMobile ? { padding: "24px 16px" } : {}) }}>
       <div style={styles.secHead}>
         <h2 style={{ ...styles.secH2, ...(isMobile ? { fontSize: 18 } : {}) }}>My Awards</h2>
       </div>
