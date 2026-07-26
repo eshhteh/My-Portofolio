@@ -750,13 +750,14 @@ export const styles = {
   cardTitle: {
     fontSize: 15,
     fontWeight: 600,
+    color: "#fff",
     display: "-webkit-box",
     WebkitLineClamp: 2,
     WebkitBoxOrient: "vertical",
     overflow: "hidden",
     wordBreak: "break-word",
     lineHeight: 1.4,
-    minHeight: "2.2em",        // reserve tinggi 2 baris, walau judulnya cuma 1 baris
+    minHeight: "2.2em",
     marginTop: 4,
     marginBottom: 0,
   },
@@ -784,7 +785,7 @@ export const styles = {
     padding: 16,
     display: "flex",
     alignItems: "center",
-    textAlign:"left",
+    textAlign: "left",
     gap: 14,
   },
   certBadge: {
@@ -856,7 +857,7 @@ export const styles = {
     fontSize: 12,
     textAlign: "center",
   },
-  
+
   timeLabel: {
     fontSize: 10.5,
     color: "#727272",
@@ -1493,7 +1494,7 @@ export const styles = {
     background: "#181818",
     borderRadius: 12,
     padding: "18px 20px",
-    textAlign:"justify",
+    textAlign: "justify",
     transition: "background .15s ease, border-color .15s ease",
   },
   timelineCardHover: {

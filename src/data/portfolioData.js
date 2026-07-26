@@ -99,7 +99,7 @@ export const PROJECTS = [
     title: "PresenSee", 
     desc: "A web-based student attendance system that leverages Face Recognition technology to automate attendance recording. The platform enables fast and accurate attendance verification while providing real-time attendance management and reporting for teachers and school administrators.", 
     stack: "Laravel · MySQL · Blade · TailwindCSS · Javascript · Python · REST API", 
-    image: "src/assets/presenseeP.png",
+    image: "/presenseeP.png",
     images: PROJECT_IMAGES.presensee,
     cat: "Fullstack", 
     grad: ["#ff5c8a", "#66103a"], 
@@ -124,7 +124,7 @@ export const PROJECTS = [
     title: "Personal Portofolio", 
     desc: "A modern and responsive portfolio website built with React to showcase my projects, skills, and experience through a clean and user-friendly interface.", 
     stack: "React · TailwindCSS · Javascript", 
-    image: "src/assets/porto.png",
+    image: "/porto.png",
     images: PROJECT_IMAGES.porto,
     cat: "Frontend", 
     grad: ["#4ecbff", "#0d3a66"], 
@@ -137,7 +137,7 @@ export const PROJECTS = [
     title: "Village Population Information System", 
     desc: "A web-based information system that enables residents to securely access and manage personal data while submitting village administrative service requests, including birth, death, and relocation registrations. The platform streamlines administrative processes and improves the efficiency of public service delivery.", 
     stack: "Laravel · MySQL · JSON · REST API · Git · Postman", 
-    image: "src/assets/magangP.png",
+    image: "/magangP.png",
     images: PROJECT_IMAGES.magang,
     cat: "Backend", 
     grad: ["#8e4bff", "#2a0d66"], 
@@ -151,7 +151,7 @@ export const PROJECTS = [
     title: "Socio-Economic Information System", 
     desc: "A web-based information system for the Sendangarum Village Office, Sleman, Yogyakarta, designed to manage population and socio-economic data. The system streamlines administrative processes, improves data accuracy, and supports efficient, responsive public service delivery.", 
     stack: "Laravel · MySQL · Blade · TailwindCSS · Javascript",
-    image: "src/assets/capstoneP.png", 
+    image: "/capstoneP.png", 
     images: PROJECT_IMAGES.capstone,
     cat: "Fullstack", 
     grad: ["#3a6df0", "#0b1a4d"], 
@@ -163,7 +163,7 @@ export const PROJECTS = [
     title: "Web-based Library Management System", 
     desc: "A simple web-based library management system for managing book collections, member data, and borrowing transactions. The system simplifies lending and return processes while improving record accuracy and operational efficiency.", 
     stack: "Laravel · MySQL · Blade · TailwindCSS · Javascript", 
-    image: "src/assets/libraryP.png",
+    image: "/libraryP.png",
     images: PROJECT_IMAGES.perpus,
     cat: "Fullstack", 
     grad: ["#ff8a3d", "#66230d"], 
@@ -174,12 +174,12 @@ export const PROJECTS = [
 ];
 
 export const IMAGESCAPSTONE = {
-  "src/assets/capstoneP.png": "capstoneP.png",
-  "src/assets/magangP.png": "magangP.png",
-  "src/assets/libraryP.png": "libraryP.png",
-  "src/assets/presenseeP.png": "presenseeP.png",
-  "src/assets/decisP.png": "decisP.png",
-  "src/assets/pp.png": "pp.png",
+  "../src/assets/capstoneP.png": "capstoneP.png",
+  "../src/assets/magangP.png": "magangP.png",
+  "../src/assets/libraryP.png": "libraryP.png",
+  "../src/assets/presenseeP.png": "presenseeP.png",
+  "../src/assets/decisP.png": "decisP.png",
+  "../src/assets/pp.png": "pp.png",
 };
 
 export const CERTIFICATIONS = [
