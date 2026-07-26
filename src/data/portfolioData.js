@@ -196,4 +196,5 @@ export const CERTIFICATIONS = [
 
 export const AWARDS = [
   { id: 1, title: "Kompetisi Mahasiswa Muhammadiyah (KMM) dan Program Kreativitas Mahasiswa Muhammadiyah (PKMM)", org: "Asosiasi Sains dan Teknologi Perguruan Tinggi Muhammadiyah 'Aisyiyah (AST-PTMA)", desc: "Peraih Medali Emas Kategori PKM Karsa Cipta", year: "2024", grad: [ACCENT, "#0d3d1e"], link: "https://drive.google.com/file/d/1qQ-WyE5XgkeEgCPUgu7d-NirI0Hx87bh/view?usp=sharing" },
+  { id: 2, title: "General Scholarship Award" , org: "Universitas Muhammadiyah Yogyakarta", desc: "Awarded the General Scholarship in recognition of consistent academic excellence and strong academic performance.", year: "2021", grad: ["#ff5c8a", "#66103a"]},
 ];
